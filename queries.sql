@@ -41,3 +41,7 @@ SELECT AVG(weight_kg) FROM animals;
 SELECT neutered, SUM(escape_attempts) as most_escape_attempts 
 FROM animals
 GROUP BY neutered;
+
+SELECT species, MIN(weight_kg), MAX(weight_kg)
+FROM animals
+GROUP BY species;
