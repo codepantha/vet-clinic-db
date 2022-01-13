@@ -52,9 +52,25 @@ WHERE date_of_birth BETWEEN '1990-01-01' AND '2000-12-12'
 GROUP BY species;
 
 SELECT name FROM animals JOIN owners ON animals.owner_id = owners.id WHERE owners.full_name = 'Melody Pond';
-SELECT animals.name AS Pokemons FROM animals JOIN species ON animals.species_id = species.id WHERE species.name = 'Pokemon';
-SELECT owners.full_name AS owners, animals.name AS animals FROM owners LEFT JOIN animals ON owners.id = animals.owner_id;
-SELECT species.name AS specie_names, COUNT(*) AS animals_count FROM animals JOIN species ON animals.species_id = species.id GROUP BY species.name;
-SELECT animals.name FROM animals JOIN owners ON animals.owner_id = owners.id WHERE owners.full_name = 'Jennifer Orwell' AND animals.species_id = (SELECT id FROM species WHERE species.name = 'Digimon');
-SELECT animals.name FROM animals JOIN owners ON animals.owner_id = owners.id WHERE owners.full_name = 'Dean Winchester' AND animals.escape_attempts = 0;
-SELECT owners.full_name AS owners, COUNT(animals) AS animals_count FROM owners LEFT JOIN animals ON owners.id = animals.owner_id GROUP BY owners.full_name;
+
+SELECT A.name FROM animals A
+INNER JOIN species S
+ON A.species_id = S.id WHERE S.name = 'Pokemon';
+
+SELECT full_name as owners, name as animals FROM owners
+LEFT JOIN animals ON owners.id = animals.owner_id;
+
+SELECT S.name as specie, COUNT(*) FROM animals JOIN species S ON animals.species_id = S.id GROUP BY S.name;
+
+SELECT A.name as Digimon from animals A
+JOIN owners O ON A.owner_id = O.id
+WHERE O.full_name = 'Jennifer Orwell' AND A.species_id = (SELECT id FROM species WHERE name = 'Digimon');
+
+SELECT name as animal_not_attempted_escape, full_name as owner FROM animals
+JOIN owners ON animals.owner_id = owners.id
+WHERE owners.full_name = 'Dean Winchester' AND animals.escape_attempts = 0;
+
+SELECT O.full_name as owner, COUNT(A) as animals_count 
+FROM owners O 
+LEFT JOIN animals A ON O.id = A.owner_id 
+GROUP BY O.full_name;
