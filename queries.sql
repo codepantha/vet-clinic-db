@@ -82,3 +82,7 @@ ORDER BY date DESC LIMIT 1;
 
 SELECT COUNT(*) FROM visits 
 WHERE vet_id = (SELECT id FROM vets WHERE name = 'Stephanie Mendez');
+
+SELECT V.name as vet, species.name as specialty FROM vets V
+LEFT JOIN specializations S ON V.id = S.vet_id 
+LEFT JOIN species ON S.species_id = species.id;
