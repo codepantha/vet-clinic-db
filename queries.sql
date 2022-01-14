@@ -92,3 +92,12 @@ JOIN visits ON visits.animal_id = animals.id
 WHERE visits.date BETWEEN '2020-01-01' AND '2020-08-30' 
 AND visits.vet_id = (SELECT id FROM vets WHERE name ='Stephanie Mendez');
 
+SELECT count(*) as visits_count, animals.name as animal_name FROM visits JOIN vets ON visits.vets_id = vets.id JOIN animals ON animals_id = animals.id GROUP BY animals.name ORDER BY visits_count DESC LIMIT 1;
+
+SELECT animals.name as animal, visit_date FROM visits JOIN vets ON visits.vets_id = vets.id JOIN animals ON visits.animals_id = animals.id WHERE vets.name = 'Maisy Smith' ORDER BY visit_date LIMIT 1;
+
+SELECT animals.name as animal_name, animals.date_of_birth as animal_date_of_birth, animals.escape_attempts, animals.neutered, animals.weight_kg, species.name as specie, owners.full_name as animals_owner, vets.name as vet_name, vets.age as vet_age, visit_date FROM visits JOIN vets ON visits.vets_id = vets.id JOIN animals on visits.animals_id = animals.id JOIN species ON animals.species_id = species.id JOIN owners ON animals.owner_id = owners.id order by visit_date desc limit 1;
+
+SELECT count(*) as visits_count FROM visits JOIN vets ON visits.vets_id = vets.id JOIN animals ON visits.animals_id = animals.id JOIN species ON animals.species_id = species.id WHERE vets.id NOT IN (SELECT specializations.vets_id FROM specializations JOIN species ON specializations.species_id = species.id);
+
+SELECT species.name as most_requested_specie FROM visits JOIN vets ON visits.vets_id = vets.id JOIN animals ON visits.animals_id = animals.id JOIN species ON animals.species_id = species.id WHERE vets.id NOT IN (select specializations.vets_id FROM specializations JOIN species ON specializations.species_id = species.id) GROUP BY species.name ORDER BY count(*) DESC LIMIT 1;
