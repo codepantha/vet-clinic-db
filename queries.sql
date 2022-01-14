@@ -79,3 +79,6 @@ SELECT A.name FROM visits V
 JOIN animals A ON A.id = V.animal_id 
 WHERE vet_id = (SELECT id FROM vets WHERE name = 'William Tatcher') 
 ORDER BY date DESC LIMIT 1;
+
+SELECT COUNT(*) FROM visits 
+WHERE vet_id = (SELECT id FROM vets WHERE name = 'Stephanie Mendez');
