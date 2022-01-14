@@ -74,3 +74,8 @@ SELECT O.full_name as owner, COUNT(A) as animals_count
 FROM owners O 
 LEFT JOIN animals A ON O.id = A.owner_id 
 GROUP BY O.full_name;
+
+SELECT A.name FROM visits V 
+JOIN animals A ON A.id = V.animal_id 
+WHERE vet_id = (SELECT id FROM vets WHERE name = 'William Tatcher') 
+ORDER BY date DESC LIMIT 1;
