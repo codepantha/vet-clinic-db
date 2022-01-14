@@ -42,3 +42,27 @@ ADD COLUMN owner_id INT;
 ALTER TABLE animals
 ADD FOREIGN KEY(owner_id)
 REFERENCES owners(id);
+
+CREATE TABLE vets (
+    ID INT UNIQUE GENERATED ALWAYS AS IDENTITY,
+    name VARCHAR(255),
+    age INT,
+    date_of_graduation DATE
+);
+
+CREATE TABLE specializations (
+   vet_id INT REFERENCES vets(id),
+   species_id INT REFERENCES species(id),
+   PRIMARY KEY (vet_id, species_id)
+);
+
+-- make the id column in animals unique
+ALTER TABLE animals ADD CONSTRAINT id UNIQUE(id);
+
+CREATE TABLE visits (
+    vet_id INT NOT NULL,
+    animal_id INT NOT NULL,
+    date DATE,
+    FOREIGN KEY (vet_id) REFERENCES vets(id),
+    FOREIGN KEY (animal_id) REFERENCES animals(id)
+);

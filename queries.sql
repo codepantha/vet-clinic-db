@@ -52,9 +52,52 @@ WHERE date_of_birth BETWEEN '1990-01-01' AND '2000-12-12'
 GROUP BY species;
 
 SELECT name FROM animals JOIN owners ON animals.owner_id = owners.id WHERE owners.full_name = 'Melody Pond';
-SELECT animals.name AS Pokemons FROM animals JOIN species ON animals.species_id = species.id WHERE species.name = 'Pokemon';
-SELECT owners.full_name AS owners, animals.name AS animals FROM owners LEFT JOIN animals ON owners.id = animals.owner_id;
-SELECT species.name AS specie_names, COUNT(*) AS animals_count FROM animals JOIN species ON animals.species_id = species.id GROUP BY species.name;
-SELECT animals.name FROM animals JOIN owners ON animals.owner_id = owners.id WHERE owners.full_name = 'Jennifer Orwell' AND animals.species_id = (SELECT id FROM species WHERE species.name = 'Digimon');
-SELECT animals.name FROM animals JOIN owners ON animals.owner_id = owners.id WHERE owners.full_name = 'Dean Winchester' AND animals.escape_attempts = 0;
-SELECT owners.full_name AS owners, COUNT(animals) AS animals_count FROM owners LEFT JOIN animals ON owners.id = animals.owner_id GROUP BY owners.full_name;
+
+SELECT A.name FROM animals A
+INNER JOIN species S
+ON A.species_id = S.id WHERE S.name = 'Pokemon';
+
+SELECT full_name as owners, name as animals FROM owners
+LEFT JOIN animals ON owners.id = animals.owner_id;
+
+SELECT S.name as specie, COUNT(*) FROM animals JOIN species S ON animals.species_id = S.id GROUP BY S.name;
+
+SELECT A.name as Digimon from animals A
+JOIN owners O ON A.owner_id = O.id
+WHERE O.full_name = 'Jennifer Orwell' AND A.species_id = (SELECT id FROM species WHERE name = 'Digimon');
+
+SELECT name as animal_not_attempted_escape, full_name as owner FROM animals
+JOIN owners ON animals.owner_id = owners.id
+WHERE owners.full_name = 'Dean Winchester' AND animals.escape_attempts = 0;
+
+SELECT O.full_name as owner, COUNT(A) as animals_count 
+FROM owners O 
+LEFT JOIN animals A ON O.id = A.owner_id 
+GROUP BY O.full_name;
+
+SELECT A.name FROM visits V 
+JOIN animals A ON A.id = V.animal_id 
+WHERE vet_id = (SELECT id FROM vets WHERE name = 'William Tatcher') 
+ORDER BY date DESC LIMIT 1;
+
+SELECT COUNT(*) FROM visits 
+WHERE vet_id = (SELECT id FROM vets WHERE name = 'Stephanie Mendez');
+
+SELECT V.name as vet, species.name as specialty FROM vets V
+LEFT JOIN specializations S ON V.id = S.vet_id 
+LEFT JOIN species ON S.species_id = species.id;
+
+SELECT name FROM animals 
+JOIN visits ON visits.animal_id = animals.id 
+WHERE visits.date BETWEEN '2020-01-01' AND '2020-08-30' 
+AND visits.vet_id = (SELECT id FROM vets WHERE name ='Stephanie Mendez');
+
+SELECT count(*) as visits_count, animals.name as animal_name FROM visits JOIN vets ON visits.vets_id = vets.id JOIN animals ON animals_id = animals.id GROUP BY animals.name ORDER BY visits_count DESC LIMIT 1;
+
+SELECT animals.name as animal, visit_date FROM visits JOIN vets ON visits.vets_id = vets.id JOIN animals ON visits.animals_id = animals.id WHERE vets.name = 'Maisy Smith' ORDER BY visit_date LIMIT 1;
+
+SELECT animals.name as animal_name, animals.date_of_birth as animal_date_of_birth, animals.escape_attempts, animals.neutered, animals.weight_kg, species.name as specie, owners.full_name as animals_owner, vets.name as vet_name, vets.age as vet_age, visit_date FROM visits JOIN vets ON visits.vets_id = vets.id JOIN animals on visits.animals_id = animals.id JOIN species ON animals.species_id = species.id JOIN owners ON animals.owner_id = owners.id order by visit_date desc limit 1;
+
+SELECT count(*) as visits_count FROM visits JOIN vets ON visits.vets_id = vets.id JOIN animals ON visits.animals_id = animals.id JOIN species ON animals.species_id = species.id WHERE vets.id NOT IN (SELECT specializations.vets_id FROM specializations JOIN species ON specializations.species_id = species.id);
+
+SELECT species.name as most_requested_specie FROM visits JOIN vets ON visits.vets_id = vets.id JOIN animals ON visits.animals_id = animals.id JOIN species ON animals.species_id = species.id WHERE vets.id NOT IN (select specializations.vets_id FROM specializations JOIN species ON specializations.species_id = species.id) GROUP BY species.name ORDER BY count(*) DESC LIMIT 1;
